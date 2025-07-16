@@ -1,6 +1,18 @@
+using Microsoft.EntityFrameworkCore;
+using MyShop.Domain.Interfaces;
+using MyShop.Infrastructure.Persistence;
+using MyShop.Infrastructure.Persistence.Repositories;
+using MyShop.Infrastructure.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<IOrderRepository, EfCoreOrderRepository>();
+builder.Services.AddScoped<OrderServices>();
+
+
+builder.Services.AddDbContext<MyShopDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
