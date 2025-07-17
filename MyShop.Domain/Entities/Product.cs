@@ -28,11 +28,9 @@ namespace MyShop.Domain.Entities
         public void DecreaseStock(int quantity)
         {
             if (quantity > StockQuantity)
-            {
                 throw new InvalidOperationException("Nicht genug Lagerbestand.");
 
-                StockQuantity -= quantity;
-            }
+            StockQuantity -= quantity;
         }
     }
 }
