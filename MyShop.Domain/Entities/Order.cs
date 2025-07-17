@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MyShop.Domain.ValueObjects;
+using MyShop.Domain.ValueObjects.Order;
 
 namespace MyShop.Domain.Entities
 {

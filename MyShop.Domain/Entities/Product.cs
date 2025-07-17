@@ -21,7 +21,7 @@ namespace MyShop.Domain.Entities
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Price = price ?? throw new ArgumentNullException(nameof(price));
             Description = description;
-            Category = category ?? throw new ArgumentNullException(nameof(category));
+            Category = category;
             StockQuantity = stockQuantity >= 0 ? stockQuantity : throw new ArgumentOutOfRangeException(nameof(stockQuantity), "Stock quantity cannot be negative.");
         }
 
