@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace MyShop.Domain.ValueObjects.Product
 {
-    internal class ProductCategory
+    public enum ProductCategory
     {
+        Electronics,
+        Clothing,
+        Books,
+        Toys,
+        Food,
+        Other
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MyShop.Domain.ValueObjects;
+using MyShop.Domain.ValueObjects.Product;
 
 namespace MyShop.Domain.Entities
 {
@@ -25,7 +25,7 @@ namespace MyShop.Domain.Entities
             StockQuantity = stockQuantity >= 0 ? stockQuantity : throw new ArgumentOutOfRangeException(nameof(stockQuantity), "Stock quantity cannot be negative.");
         }
 
-        public void DescreaseStock(int quantity)
+        public void DecreaseStock(int quantity)
         {
             if (quantity > StockQuantity)
             {
