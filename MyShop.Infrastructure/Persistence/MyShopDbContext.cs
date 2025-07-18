@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MyShop.Domain.Entities;
-using MyShop.Domain.ValueObjects;
+using MyShop.Domain.ValueObjects.Order;
 
 
 namespace MyShop.Infrastructure.Persistence
