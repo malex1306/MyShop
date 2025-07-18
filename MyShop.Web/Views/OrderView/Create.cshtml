@@ -1,0 +1,45 @@
+﻿@model MyShop.Infrastructure.Dtos.CreateOrderDto
+
+@{
+	ViewData["Title"] = "Neue Bestellung";
+}
+
+<h2>Neue Bestellung</h2>
+
+<form asp-action="NewOrder" asp-controller="Order" method="post">
+	<div class="form-group">
+		<label for="CustomerName">Kundenname</label>
+		<input type="text" class="form-control" id="CustomerName" name="CustomerName" required />
+	</div>
+
+	<h4>Artikel</h4>
+	<div id="items">
+		<div class="item">
+			<input type="text" name="Item[0].ProductName" placeholder="Produktname" required />
+			<input type="number" name="Item[0].Price" placeholder="Preis" step="0.01" required />
+			<input type="number" name="Item[0].Quantity" placeholder="Menge" required />
+		</div>
+	</div>
+
+	<button type="button" onclick="addItem()">+ Artikel hinzufügen</button>
+	<br /><br />
+	<button type="submit" class="btn btn-primary">Bestellung abschicken</button>
+</form>
+
+@section Scripts {
+	<script>
+        let index = 1;
+        function addItem() {
+            const itemsDiv = document.getElementById("items");
+            const newItem = document.createElement("div");
+            newItem.classList.add("item");
+            newItem.innerHTML = `
+                <input type="text" name="Item[${index}].ProductName" placeholder="Produktname" required />
+                <input type="number" name="Item[${index}].Price" placeholder="Preis" step="0.01" required />
+                <input type="number" name="Item[${index}].Quantity" placeholder="Menge" required />
+            `;
+            itemsDiv.appendChild(newItem);
+            index++;
+        }
+    </script>
+}

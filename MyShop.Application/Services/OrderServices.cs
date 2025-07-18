@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MyShop.Domain.Entities;
 using MyShop.Domain.Interfaces;
 using MyShop.Domain.ValueObjects;
+using MyShop.Domain.ValueObjects.Order;
 using MyShop.Infrastructure.Dtos;
 
 namespace MyShop.Infrastructure.Services

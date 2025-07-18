@@ -3,7 +3,7 @@ using MyShop.Domain.Interfaces;
 using MyShop.Infrastructure.Dtos;
 using MyShop.Infrastructure.Services;
 
-namespace MyShop.Web.Controllers
+namespace MyShop.Web.Controllers.Order
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -19,13 +19,13 @@ namespace MyShop.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult AllOrders()
+        public IActionResult GetAllOrders()
         {
             return Ok(_repository.getAll());
         }
 
         [HttpPost]
-        public IActionResult NewOrder([FromBody] CreateOrderDto dto)
+        public IActionResult NewOrder([FromForm] CreateOrderDto dto)
         {
             var order = _services.CreateOrder(dto);
             _repository.Add(order);
