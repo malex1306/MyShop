@@ -15,6 +15,7 @@ namespace MyShop.Infrastructure.Persistence
         public MyShopDbContext(DbContextOptions<MyShopDbContext> options) : base(options){}
 
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Product> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,6 +30,32 @@ namespace MyShop.Infrastructure.Persistence
             modelBuilder.Entity<OrderItem>()
                 .Property(i => i.Price)
                 .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<Product>(entity =>
+            {
+                entity.HasKey(p => p.Id);
+
+                // Value Object: ProductName
+                entity.OwnsOne(p => p.Name, name =>
+                {
+                    name.Property(n => n.Value)
+                        .HasColumnName("Name")
+                        .IsRequired();
+                });
+
+                // Value Object: Money
+                entity.OwnsOne(p => p.Price, price =>
+                {
+                    price.Property(p => p.Amount)
+                        .HasColumnName("Price")
+                        .HasColumnType("decimal(18,2)")
+                        .IsRequired();
+                });
+
+                entity.Property(p => p.Description).IsRequired();
+                entity.Property(p => p.Category).IsRequired();
+                entity.Property(p => p.StockQuantity).IsRequired();
+            });
         }
     }
 }
