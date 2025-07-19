@@ -12,15 +12,18 @@ namespace MyShop.Domain.Entities
         public int Id { get; set; }
         public ProductName Name { get; private set; }
         public Money Price { get; set; }
-        public string? Description { get; set; }
+        public string Description { get; set; }
         public ProductCategory Category { get; set; }
         public int StockQuantity { get; set; }
+
+        protected Product() { }
+
 
         public Product(ProductName name, Money price, string? description, ProductCategory category, int stockQuantity)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Price = price ?? throw new ArgumentNullException(nameof(price));
-            Description = description;
+            Description = description ?? throw new ArgumentNullException(nameof(description));
             Category = category;
             StockQuantity = stockQuantity >= 0 ? stockQuantity : throw new ArgumentOutOfRangeException(nameof(stockQuantity), "Stock quantity cannot be negative.");
         }

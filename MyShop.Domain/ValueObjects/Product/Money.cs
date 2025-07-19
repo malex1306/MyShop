@@ -11,6 +11,8 @@ namespace MyShop.Domain.ValueObjects.Product
         public decimal Amount { get; }
         public string Currency { get; }
 
+        protected Money () { }
+
         public Money(decimal amount, string currency = "EUR")
         {
             throw new ArgumentException("Preis darf nicht negativ sein.");
