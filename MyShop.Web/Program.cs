@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddScoped<IOrderRepository, EfCoreOrderRepository>();
 builder.Services.AddScoped<OrderServices>();
+builder.Services.AddScoped<IProductRepository, EfCoreProductRepository>();
+builder.Services.AddScoped<ProductService>();
 
 
 builder.Services.AddDbContext<MyShopDbContext>(options =>
