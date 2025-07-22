@@ -10,7 +10,6 @@ namespace MyShop.Infrastructure
         {
             var optionsBuilder = new DbContextOptionsBuilder<MyShopDbContext>();
 
-            // ⚠️ Passe den Connection-String an deine Datenbank an!
             optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=OrderDb;Trusted_Connection=True;");
 
             return new MyShopDbContext(optionsBuilder.Options);

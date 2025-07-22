@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyShop.Domain.Interfaces;
+using MyShop.Infrastructure.Customer;
 using MyShop.Infrastructure.Persistence;
 using MyShop.Infrastructure.Persistence.Repositories;
 using MyShop.Infrastructure.Services;
@@ -15,9 +17,21 @@ builder.Services.AddScoped<ProductService>();
 
 builder.Services.AddDbContext<MyShopDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddIdentity<CustomerIdentity, IdentityRole<int>>()
+    .AddEntityFrameworkStores<MyShopDbContext>()
+    .AddDefaultTokenProviders();
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await Seed.SeedAdmin(services);
+}
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
