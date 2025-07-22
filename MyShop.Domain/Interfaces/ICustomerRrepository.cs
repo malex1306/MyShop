@@ -9,8 +9,8 @@ namespace MyShop.Domain.Interfaces
 {
     public class ICustomerRrepository
     {
-        void Add(Customer customer);
-        Customer? GetById(int id);
-        List<Customer> GetAll();
+        //void Add(Customer customer);
+        //Customer? GetById(int id);
+        //List<Customer> GetAll();
     }
 }
