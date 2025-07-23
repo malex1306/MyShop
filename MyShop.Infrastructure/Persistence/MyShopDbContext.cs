@@ -19,6 +19,7 @@ namespace MyShop.Infrastructure.Persistence
 
         public DbSet<Order> Orders { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<CustomerIdentity> Customers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
