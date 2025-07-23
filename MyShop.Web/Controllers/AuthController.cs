@@ -1,50 +1,48 @@
-﻿// MyShop.Web/Controllers/AuthController.cs
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using MyShop.Infrastructure.Customer;
 using MyShop.Application.ViewModels;
+using MyShop.Infrastructure.Customer;
 
-namespace MyShop.Web.Controllers
+[ApiController]
+[Route("api/[controller]")]
+public class AuthController : Controller
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    private readonly SignInManager<CustomerIdentity> _signInManager;
+
+    public AuthController(SignInManager<CustomerIdentity> signInManager)
     {
-        private readonly UserManager<CustomerIdentity> _userManager;
-        private readonly SignInManager<CustomerIdentity> _signInManager;
+        _signInManager = signInManager;
+    }
 
-        public AuthController(UserManager<CustomerIdentity> userManager, SignInManager<CustomerIdentity> signInManager)
-        {
-            _userManager = userManager;
-            _signInManager = signInManager;
-        }
+    [HttpGet("login")]
+    public IActionResult Login()
+    {
+        return View();
+    }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterViewModel model)
-        {
-            var user = new CustomerIdentity
-            {
-                UserName = model.Email,
-                Email = model.Email,
-                FirstName = model.FirstName,
-                LastName = model.LastName
-            };
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginViewModel model)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
 
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
-                return BadRequest(result.Errors);
+        var result = await _signInManager.PasswordSignInAsync(
+            model.Email,
+            model.Password,
+            model.RememberMe,
+            lockoutOnFailure: false);
 
-            return Ok("User registered");
-        }
+        if (result.Succeeded)
+            return RedirectToAction("Index", "Home");
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginViewModel model)
-        {
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
-            if (!result.Succeeded)
-                return Unauthorized("Invalid login");
+        ModelState.AddModelError(string.Empty, "Login fehlgeschlagen.");
+        return View(model);
+    }
 
-            return Ok("Login successful");
-        }
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await _signInManager.SignOutAsync();
+        return RedirectToAction("Login");
     }
 }

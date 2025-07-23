@@ -1,0 +1,38 @@
+﻿@model MyShop.Application.ViewModels.LoginViewModel
+
+@{
+	ViewData["Title"] = "Login";
+}
+
+<div class="container mt-5">
+	<div class="row justify-content-center">
+		<div class="col-md-6">
+			<h2 class="text-center mb-4">Login</h2>
+
+			<form asp-action="Login" method="post">
+				<div class="form-group mb-3">
+					<label asp-for="Email"></label>
+					<input asp-for="Email" class="form-control" />
+					<span asp-validation-for="Email" class="text-danger"></span>
+				</div>
+
+				<div class="form-group mb-3">
+					<label asp-for="Password"></label>
+					<input asp-for="Password" class="form-control" />
+					<span asp-validation-for="Password" class="text-danger"></span>
+				</div>
+
+				<div class="form-group form-check mb-3">
+					<input asp-for="RememberMe" class="form-check-input" />
+					<label asp-for="RememberMe" class="form-check-label">Angemeldet bleiben</label>
+				</div>
+
+				<button type="submit" class="btn btn-primary w-100">Anmelden</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
