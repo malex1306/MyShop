@@ -1,9 +1,11 @@
-using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization; // Wichtig!
 using Microsoft.AspNetCore.Mvc;
 using MyShop.Web.Models;
+using System.Diagnostics;
 
 namespace MyShop.Web.Controllers
 {
+    [Authorize] 
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -15,7 +17,8 @@ namespace MyShop.Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+           
+            return View(); 
         }
 
         public IActionResult Privacy()

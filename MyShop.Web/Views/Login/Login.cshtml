@@ -1,4 +1,4 @@
-﻿@model MyShop.Application.ViewModels.LoginViewModel
+﻿@model MyShop.Web.ViewModels.LoginViewModel
 
 @{
 	ViewData["Title"] = "Login";
@@ -9,7 +9,7 @@
 		<div class="col-md-6">
 			<h2 class="text-center mb-4">Login</h2>
 
-			<form asp-action="Login" method="post">
+			<form asp-controller="Auth" asp-action="Login" method="post">
 				<div class="form-group mb-3">
 					<label asp-for="Email"></label>
 					<input asp-for="Email" class="form-control" />

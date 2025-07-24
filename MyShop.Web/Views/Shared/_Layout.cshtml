@@ -23,14 +23,24 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-	                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-	                        <a class="nav-link text-dark" asp-area="" asp-controller="OrderView" asp-action="Create">Bestellung</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="OrderView" asp-action="Create">Bestellung</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Login">Bestellung</a>
-                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-outline-danger nav-link" style="border:none; background:none; padding:0; cursor:pointer;">
+                                        Logout
+                                    </button>
+                                </form>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
