@@ -8,12 +8,27 @@ using MyShop.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Kestrel so konfigurieren, dass er HTTP und HTTPS Ports hört
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenLocalhost(5290); // HTTP
+    options.ListenLocalhost(7242, listenOptions =>
+    {
+        listenOptions.UseHttps(); // HTTPS aktivieren
+    });
+});
+
+// HTTPS-Redirect Middleware wissen lassen, auf welchen Port sie umleiten soll
+builder.Services.Configure<Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionOptions>(options =>
+{
+    options.HttpsPort = 7242;
+});
+
+// DI-Registrierungen
 builder.Services.AddScoped<IOrderRepository, EfCoreOrderRepository>();
 builder.Services.AddScoped<OrderServices>();
 builder.Services.AddScoped<IProductRepository, EfCoreProductRepository>();
 builder.Services.AddScoped<ProductService>();
-
 
 builder.Services.AddDbContext<MyShopDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -26,18 +41,17 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+// Seed Admin-Daten beim Start
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     await Seed.SeedAdmin(services);
 }
 
-
-// Configure the HTTP request pipeline.
+// HTTP Request Pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -45,6 +59,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
