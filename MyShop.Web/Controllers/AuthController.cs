@@ -27,6 +27,7 @@ namespace MyShop.Web.Controllers
 
         // POST: /auth/login
         [HttpPost("login")]
+
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
@@ -41,12 +42,7 @@ namespace MyShop.Web.Controllers
                 return View("~/Views/Login/Login.cshtml", model);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(
-                user.Email,
-                model.Password,
-                model.RememberMe,
-                lockoutOnFailure: false);
-            Console.WriteLine($"Login result: Succeeded={result.Succeeded}, IsLockedOut={result.IsLockedOut}, IsNotAllowed={result.IsNotAllowed}");
+            var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
 
             if (result.Succeeded)
             {
@@ -65,7 +61,7 @@ namespace MyShop.Web.Controllers
                 ModelState.AddModelError(string.Empty, "Login fehlgeschlagen. Bitte überprüfe deine Anmeldedaten.");
             }
 
-            return View(model);
+            return View("~/Views/Login/Login.cshtml", model);
         }
 
         // POST: /auth/logout

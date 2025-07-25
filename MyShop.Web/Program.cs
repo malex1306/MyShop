@@ -8,7 +8,7 @@ using MyShop.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Kestrel so konfigurieren, dass er HTTP und HTTPS Ports hört
+// Kestrel so konfigurieren, dass er HTTP und HTTPS Ports hï¿½rt
 builder.WebHost.ConfigureKestrel(options =>
 {
     options.ListenLocalhost(5290); // HTTP
@@ -29,6 +29,7 @@ builder.Services.AddScoped<IOrderRepository, EfCoreOrderRepository>();
 builder.Services.AddScoped<OrderServices>();
 builder.Services.AddScoped<IProductRepository, EfCoreProductRepository>();
 builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<IPasswordHasher<CustomerIdentity>, PasswordHasher<CustomerIdentity>>();
 
 builder.Services.AddDbContext<MyShopDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -36,6 +37,11 @@ builder.Services.AddDbContext<MyShopDbContext>(options =>
 builder.Services.AddIdentity<CustomerIdentity, IdentityRole<int>>()
     .AddEntityFrameworkStores<MyShopDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/login";
+});
 
 builder.Services.AddControllersWithViews();
 
@@ -45,6 +51,11 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+
+    // Wenden Sie ausstehende Migrationen an, um die DB zu erstellen/aktualisieren
+    var dbContext = services.GetRequiredService<MyShopDbContext>();
+    dbContext.Database.Migrate();
+
     await Seed.SeedAdmin(services);
 }
 
@@ -62,6 +73,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllers(); // FÃ¼r Attribut-basiertes Routing
 
 app.MapControllerRoute(
     name: "default",

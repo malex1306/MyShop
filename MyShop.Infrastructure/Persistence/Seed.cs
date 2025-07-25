@@ -27,12 +27,18 @@ namespace MyShop.Infrastructure.Persistence
                 var newAdmin = new CustomerIdentity
                 {
                     UserName = "admin@shop.local",
-                    Email = "admin@shop.local",
+                    Email = "admin@shop.local", 
                     FirstName = "Admin",
-                    LastName = "User"
+                    LastName = "User",
+                    EmailConfirmed = true,
+                    PhoneNumber = string.Empty 
                 };
-                await userManager.CreateAsync(newAdmin, "Admin123!");
-                await userManager.AddToRoleAsync(newAdmin, "Admin");
+                var result = await userManager.CreateAsync(newAdmin, "Admin123!");
+                if (result.Succeeded)
+                {
+                    await userManager.SetEmailAsync(newAdmin, "admin@shop.local");
+                    await userManager.AddToRoleAsync(newAdmin, "Admin");
+                }
             }
         }
 
