@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MyShop.Application.Services;
 using MyShop.Domain.Entities;
 using MyShop.Domain.Interfaces;
 using MyShop.Domain.ValueObjects.Product;
@@ -10,7 +6,7 @@ using MyShop.Infrastructure.Dtos;
 
 namespace MyShop.Infrastructure.Services
 {
-    public class ProductService
+    public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
 
@@ -19,19 +15,19 @@ namespace MyShop.Infrastructure.Services
             _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
         }
 
-        public List<ProductDto> GetAllProducts()
+        public async Task<List<ProductDto>> GetAllProductsAsync()
         {
-            var products = _productRepository.GetAll();
+            var products = await _productRepository.GetAllAsync();
             return products.Select(MapToDto).ToList();
         }
 
-        public ProductDto? GetProductById(int id)
+        public async Task<ProductDto?> GetProductByIdAsync(int id)
         {
-            var product = _productRepository.GetById(id);
+            var product = await _productRepository.GetByIdAsync(id);
             return product == null ? null : MapToDto(product);
         }
 
-        public void AddProduct(ProductDto dto)
+        public async Task CreateProductAsync(ProductDto dto)
         {
             var product = new Product(
                 new ProductName(dto.Name),
@@ -40,10 +36,28 @@ namespace MyShop.Infrastructure.Services
                 Enum.Parse<ProductCategory>(dto.Category),
                 dto.StockQuantity);
 
-            _productRepository.Add(product);
+            await _productRepository.AddAsync(product);
         }
 
-        //Mapping
+        public async Task UpdateProductAsync(ProductDto dto)
+        {
+            var existing = await _productRepository.GetByIdAsync(dto.Id);
+            if (existing == null) return;
+
+            existing.UpdateName(new ProductName(dto.Name));
+            existing.UpdatePrice(new Money(dto.Price));
+            existing.UpdateDescription(dto.Description);
+            existing.UpdateCategory(Enum.Parse<ProductCategory>(dto.Category));
+            existing.UpdateStockQuantity(dto.StockQuantity);
+
+            await _productRepository.UpdateAsync(existing);
+        }
+
+        public async Task DeleteProductAsync(int id)
+        {
+            await _productRepository.DeleteAsync(id);
+        }
+
         private ProductDto MapToDto(Product product)
         {
             return new ProductDto

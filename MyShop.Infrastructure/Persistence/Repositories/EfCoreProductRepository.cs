@@ -18,20 +18,36 @@ namespace MyShop.Infrastructure.Persistence.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public void Add(Product product)
+        public async Task<List<Product>> GetAllAsync()
         {
-            _context.Products.Add(product);
-            _context.SaveChanges();
+            return await _context.Products.ToListAsync();
         }
 
-        public List<Product> GetAll()
+        public async Task<Product?> GetByIdAsync(int id)
         {
-            return _context.Products.ToList();
+            return await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public Product? GetById(int id)
+        public async Task AddAsync(Product product)
         {
-            return _context.Products.FirstOrDefault(p => p.Id == id);
+            await _context.Products.AddAsync(product);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(Product product)
+        {
+            _context.Products.Update(product);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var product = await _context.Products.FindAsync(id);
+            if (product != null)
+            {
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

@@ -9,8 +9,11 @@ namespace MyShop.Domain.Interfaces
 {
     public interface IProductRepository
     {
-        void Add(Product product);
-        Product? GetById(int id);
-        List<Product> GetAll();
+        Task<List<Product>> GetAllAsync();
+        Task<Product?> GetByIdAsync(int id);
+        Task AddAsync(Product product);
+        Task UpdateAsync(Product product);
+        Task DeleteAsync(int id);
+
     }
 }
